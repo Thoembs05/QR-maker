@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Maker</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f4f4; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
+        .container { background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        input, button { padding: 0.5rem; margin: 0.5rem 0; width: 100%; }
+        #qrcode { margin-top: 1rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>QR Maker</h1>
+        <input type="text" id="qr-input" placeholder="Enter text or URL" />
+        <button onclick="generateQR()">Generate QR Code</button>
+        <div id="qrcode"></div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script>
+        function generateQR() {
+            const input = document.getElementById('qr-input').value;
+            const qrDiv = document.getElementById('qrcode');
+            qrDiv.innerHTML = '';
+            if (input.trim() !== '') {
+                QRCode.toCanvas(input, { width: 256 }, function (err, canvas) {
+                    if (err) return alert('Error generating QR code');
+                    qrDiv.appendChild(canvas);
+                });
+            }
+        }
+    </script>
+</body>
+</html>

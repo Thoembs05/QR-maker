@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Maker</title>
+    <style>
+        :root {
+            --primary: #a259ff;
+            --secondary: #6a11cb;
+            --light-bg: linear-gradient(135deg, #a259ff 0%, #f4f4f4 100%);
+            --dark-bg: linear-gradient(135deg, #6a11cb 0%, #1a1a2e 100%);
+            --container-bg-light: rgba(255,255,255,0.95);
+            --container-bg-dark: rgba(34,34,51,0.95);
+            --text-light: #222;
+            --text-dark: #f4f4f4;
+        }
+        body {
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: var(--light-bg);
+            color: var(--text-light);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.5s, color 0.5s;
+        }
+        body.dark {
+            background: var(--dark-bg);
+            color: var(--text-dark);
+        }
+        .container {
+            background: var(--container-bg-light);
+            padding: 3.5rem 2.5rem;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(162,89,255,0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 380px;
+            min-height: 520px;
+            transition: background 0.5s, color 0.5s;
+        }
+        body.dark .container {
+            background: var(--container-bg-dark);
+        }
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, #a259ff, #6a11cb);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            margin-bottom: 1.5rem;
+        }
+        input, button, textarea {
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            width: 100%;
+            border-radius: 8px;
+            border: none;
+            font-size: 1rem;
+            outline: none;
+            transition: box-shadow 0.3s;
+        }
+        input {
+            box-shadow: 0 2px 8px rgba(162,89,255,0.08);
+        }
+        button {
+            background: linear-gradient(90deg, #a259ff, #6a11cb);
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(162,89,255,0.15);
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: linear-gradient(90deg, #6a11cb, #a259ff);
+        }
+        #qrcode {
+            margin-top: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .download-btn {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.5rem 1.2rem;
+            background: linear-gradient(90deg, #a259ff, #6a11cb);
+            color: #fff;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(162,89,255,0.15);
+            transition: background 0.3s;
+        }
+        .download-btn:hover {
+            background: linear-gradient(90deg, #6a11cb, #a259ff);
+        }
+        .mode-toggle {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--primary);
+            z-index: 10;
+            transition: color 0.3s;
+        }
+        body.dark .mode-toggle {
+            color: #fff;
+        }
+        textarea {
+            width: 100%;
+            min-height: 100px;
+            max-height: 220px;
+            resize: vertical;
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: none;
+            font-size: 1rem;
+            box-shadow: 0 2px 8px rgba(162,89,255,0.08);
+            margin: 0.5rem 0;
+            color: var(--text-light);
+            background: #f8f6ff;
+            transition: background 0.5s, color 0.5s;
+        }
+        body.dark textarea {
+            color: var(--text-dark);
+            background: #23213a;
+        }
+        @media (max-width: 600px) {
+            .container { padding: 1.2rem 0.5rem; }
+            h1 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <button class="mode-toggle" id="modeToggle" title="Toggle dark/light mode">🌙</button>
+    <div class="container">
+        <h1>QR Maker</h1>
+        <textarea id="qr-input" placeholder="Enter text or URL"></textarea>
+        <button onclick="generateQR()">Generate QR Code</button>
+        <div id="qrcode"></div>
+    </div>
+    <script src="/static/script.js"></script>
+    <script>
+        // Dark/Light mode toggle
+        const modeToggle = document.getElementById('modeToggle');
+        function setMode(dark) {
+            document.body.classList.toggle('dark', dark);
+            modeToggle.textContent = dark ? '☀️' : '🌙';
+            localStorage.setItem('qr-dark-mode', dark ? '1' : '0');
+        }
+        modeToggle.onclick = () => setMode(!document.body.classList.contains('dark'));
+        // On load, set mode from localStorage
+        (function() {
+            const dark = localStorage.getItem('qr-dark-mode') === '1';
+            setMode(dark);
+        })();
+    </script>
+</body>
+</html>
