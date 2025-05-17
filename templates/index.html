@@ -100,19 +100,27 @@
         .download-btn:hover {
             background: linear-gradient(90deg, #6a11cb, #a259ff);
         }
-        .mode-toggle {
-            position: absolute;
-            top: 2rem;
-            right: 2rem;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
+        .mode-toggle-group {
+            display: flex;
+            gap: 1.2rem;
+            align-self: flex-end;
+            margin-bottom: 1rem;
+        }
+        .mode-radio {
+            display: flex;
+            align-items: center;
+            font-size: 1rem;
             cursor: pointer;
             color: var(--primary);
-            z-index: 10;
-            transition: color 0.3s;
+            font-weight: 500;
         }
-        body.dark .mode-toggle {
+        .mode-radio input[type="radio"] {
+            accent-color: #a259ff;
+            margin-right: 0.4em;
+            width: 1.1em;
+            height: 1.1em;
+        }
+        body.dark .mode-radio {
             color: #fff;
         }
         textarea {
@@ -141,8 +149,17 @@
     </style>
 </head>
 <body>
-    <button class="mode-toggle" id="modeToggle" title="Toggle dark/light mode">🌙</button>
     <div class="container">
+        <div class="mode-toggle-group">
+            <label class="mode-radio">
+                <input type="radio" name="mode" id="lightMode" value="light">
+                Light Mode
+            </label>
+            <label class="mode-radio">
+                <input type="radio" name="mode" id="darkMode" value="dark">
+                Dark Mode
+            </label>
+        </div>
         <h1>QR Maker</h1>
         <textarea id="qr-input" placeholder="Enter text or URL"></textarea>
         <button onclick="generateQR()">Generate QR Code</button>
@@ -150,14 +167,20 @@
     </div>
     <script src="/static/script.js"></script>
     <script>
-        // Dark/Light mode toggle
-        const modeToggle = document.getElementById('modeToggle');
+        // Dark/Light mode radio toggle
+        const lightRadio = document.getElementById('lightMode');
+        const darkRadio = document.getElementById('darkMode');
         function setMode(dark) {
             document.body.classList.toggle('dark', dark);
-            modeToggle.textContent = dark ? '☀️' : '🌙';
             localStorage.setItem('qr-dark-mode', dark ? '1' : '0');
+            if (dark) {
+                darkRadio.checked = true;
+            } else {
+                lightRadio.checked = true;
+            }
         }
-        modeToggle.onclick = () => setMode(!document.body.classList.contains('dark'));
+        lightRadio.onclick = () => setMode(false);
+        darkRadio.onclick = () => setMode(true);
         // On load, set mode from localStorage
         (function() {
             const dark = localStorage.getItem('qr-dark-mode') === '1';
